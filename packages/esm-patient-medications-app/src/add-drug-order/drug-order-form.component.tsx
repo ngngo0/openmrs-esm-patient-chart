@@ -75,18 +75,18 @@ function useCreateMedicationOrderFormSchema() {
         message: t('freeDosageErrorMessage', 'Add free dosage note'),
       }),
       dosage: z.number({
-        invalid_type_error: t('dosageRequiredErrorMessage', 'Dosage is required'),
+        invalid_type_error: t('dosageRequiredErrorMessage', 'Dosage OOGA? is required'),
       }),
       unit: z.object(
         { ...comboSchema },
         {
-          invalid_type_error: t('selectUnitErrorMessage', 'Dose unit is required'),
+          invalid_type_error: t('selectUnitErrorMessage', 'Dose unit  OOGA???is required'),
         },
       ),
       route: z.object(
         { ...comboSchema },
         {
-          invalid_type_error: t('selectRouteErrorMessage', 'Route is required'),
+          invalid_type_error: t('selectRouteErrorMessage', 'Route eee is required'),
         },
       ),
       patientInstructions: z.string().nullable(),
@@ -100,12 +100,10 @@ function useCreateMedicationOrderFormSchema() {
           })
         : z.string().nullish(),
       startDate: z.date(),
-      frequency: z.object(
-        { ...comboSchema },
-        {
-          invalid_type_error: t('selectFrequencyErrorMessage', 'Frequency is required'),
-        },
-      ),
+      frequency: z
+        .object({ ...comboSchema })
+        .optional()
+        .nullable(),
     };
 
     const outpatientDrugOrderFields = {
@@ -120,7 +118,7 @@ function useCreateMedicationOrderFormSchema() {
             return true;
           },
           {
-            message: t('pillDispensedErrorMessage', 'Quantity to dispense is required'),
+            message: t('pillDispensedErrorMessage', 'Quantity to dispense is required OOGA?'),
           },
         ),
       quantityUnits: z
@@ -167,7 +165,7 @@ function useCreateMedicationOrderFormSchema() {
       dosage: z.number().nullable(),
       unit: z.object(comboSchema).nullable(),
       route: z.object(comboSchema).nullable(),
-      frequency: z.object(comboSchema).nullable(),
+      frequency: z.object(comboSchema).optional().nullish(),
     });
 
     return z.discriminatedUnion('isFreeTextDosage', [nonFreeTextDosageSchema, freeTextDosageSchema]);
@@ -535,6 +533,7 @@ export function DrugOrderForm({ initialOrderBasketItem, onSave, onCancel, prompt
                         items={orderFrequencies}
                         shouldFilterItem={filterItemsBySynonymNames}
                         placeholder={t('editFrequencyComboBoxTitle', 'Frequency')}
+                        disabled={watch('asNeeded')}
                         titleText={t('editFrequencyComboBoxTitle', 'Frequency')}
                         itemToString={(item: CommonMedicationValueCoded) => item?.value}
                       />
@@ -585,7 +584,7 @@ export function DrugOrderForm({ initialOrderBasketItem, onSave, onCancel, prompt
                             placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
                             rows={3}
                             maxLength={255}
-                            disabled={!watch('asNeeded')}
+                            //disabled={!watch('asNeeded')}
                           />
                         </InputWrapper>
                       </Column>
